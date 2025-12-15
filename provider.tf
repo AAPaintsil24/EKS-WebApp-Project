@@ -13,11 +13,13 @@ provider "aws" {
   alias  = "primary"
 }
 
-# terraform {
-#   backend "s3" {
-#     bucket = "my-terraform-state-bucket"
-#     key    = "albertdevops/terraform/statefile.tfstate"
-#     region = "eu-north-1"
-#     # ... other backend-specific configuration
-#   }
-# }
+terraform {
+  backend "s3" {
+    bucket = "my-terraform-backend-albert"
+    key    = "albertdevops/terraform/statefile.tfstate"
+    region = "eu-north-1"
+    dynamodb_table = "terraform-locks"
+    encrypt        = true
+    # ... other backend-specific configuration
+  }
+}
