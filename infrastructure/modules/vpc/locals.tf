@@ -15,11 +15,4 @@ locals {
     "${var.availability_zones[1]}-db"   = var.private_subnet_cidrs[3]
   }
 
-  #############################################
-  # Local Variables for DB Subnet Group (Last Two Private Subnets)
-  #############################################
-  private_subnet_keys       = keys(aws_subnet.private)
-  db_subnet_keys            = slice(local.private_subnet_keys, length(local.private_subnet_keys) - 2, length(local.private_subnet_keys))
-  db_subnet_ids             = [for k in local.db_subnet_keys : aws_subnet.private[k].id]
-
 }
