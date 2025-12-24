@@ -16,4 +16,7 @@ override.tf.json
 terraform.tfvars
 terraform.tfvars.json
 
+#terraform oidc provider
+oidc.tf
+
 
