@@ -55,8 +55,12 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
-        run: terraform init
-
+        run: |
+          terraform init \
+          -backend-config="bucket=my-terraform-backend-albert" \
+          -backend-config="region=${{ inputs.aws-region }}" \
+          -backend-config="key=albertdevops/terraform/${{ github.event.inputs.environment }}/statefile.tfstate"
+          
       - name: Terraform Plan
         if: ${{ github.event.inputs.infrastructure-action == 'apply' }}
         run: terraform plan -var-file=./env/${{ github.event.inputs.environment }}.tfvars -out=tfplan
