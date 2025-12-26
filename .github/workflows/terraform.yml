@@ -59,12 +59,14 @@ jobs:
            terraform init \
              -backend-config="bucket=my-terraform-backend-albert" \
              -backend-config="region=${{ inputs.aws-region }}" \
-             -backend-config="key=albertdevops/terraform/dev/statefile.tfstate" \
-             -backend-config="dynamodb_table=terraform-locks"
-    
+             -backend-config="key=albertdevops/terraform/${{ inputs.environment }}/statefile.tfstate"
+             
+      - name: Terraform Plan
+        if: ${{ inputs.infrastructure-action == 'apply' }}
+        run: terraform plan -var-file=./env/${{ inputs.environment }}.tfvars -out=tfplan
       - name: Terraform Apply
         if: ${{ inputs.infrastructure-action == 'apply' }}
-        run: terraform apply -auto-approve 
+        run: terraform apply -auto-approve tfplan
 
       - name: Terraform Destroy
         if: ${{ inputs.infrastructure-action == 'destroy' }}
