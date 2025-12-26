@@ -56,19 +56,18 @@ jobs:
 
       - name: Terraform Init
         run: |
-          terraform init \
-          -backend-config="bucket=my-terraform-backend-albert" \
-          -backend-config="region=${{ inputs.aws-region }}" \
-          -backend-config="key=albertdevops/terraform/${{ github.event.inputs.environment }}/statefile.tfstate"
+           terraform init \
+             -backend-config="bucket=my-terraform-backend-albert" \
+             -backend-config="region=${{ inputs.aws-region }}" \
+             -backend-config="key=albertdevops/terraform/${{ inputs.environment }}/statefile.tfstate"
           
       - name: Terraform Plan
-        if: ${{ github.event.inputs.infrastructure-action == 'apply' }}
-        run: terraform plan -var-file=./env/${{ github.event.inputs.environment }}.tfvars -out=tfplan
-
+        if: ${{ inputs.infrastructure-action == 'apply' }}
+        run: terraform plan -var-file=./env/${{ inputs.environment }}.tfvars -out=tfplan
       - name: Terraform Apply
-        if: ${{ github.event.inputs.infrastructure-action == 'apply' }}
+        if: ${{ inputs.infrastructure-action == 'apply' }}
         run: terraform apply -auto-approve tfplan
 
       - name: Terraform Destroy
-        if: ${{ github.event.inputs.infrastructure-action == 'destroy' }}
-        run: terraform destroy -auto-approve -var-file=./env/${{ github.event.inputs.environment }}.tfvars
+        if: ${{ inputs.infrastructure-action == 'destroy' }}
+        run: terraform destroy -auto-approve -var-file=./env/${{ inputs.environment }}.tfvars
