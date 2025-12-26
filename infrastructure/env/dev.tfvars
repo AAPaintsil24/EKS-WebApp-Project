@@ -1,5 +1,6 @@
 aws_region = "eu-north-1"
 name_prefix = "albert-dev"
+env = "dev"
 vpc_cidr = "10.0.0.0/23"
 availability_zones = ["eu-north-1a", "eu-north-1b"]
 public_subnets_cidrs = ["10.0.0.0/26", "10.0.0.64/26"]
