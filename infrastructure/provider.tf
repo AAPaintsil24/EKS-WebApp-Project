@@ -8,7 +8,6 @@ terraform {
 
   backend "s3" {
     bucket = "my-terraform-backend-albert"
-    key    = "albertdevops/terraform/${var.env}/statefile.tfstate"
     region = "eu-north-1"
     encrypt = true
     use_lockfile = true
