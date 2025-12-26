@@ -13,13 +13,9 @@ terraform {
     dynamodb_table = "terraform-locks"
   }
     
-    versioning {
-      enabled = true
-    }
+    
   }
 
-  
-}
 
 provider "aws" {
   region = var.aws_region

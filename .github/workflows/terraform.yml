@@ -1,12 +1,7 @@
 name: 'Infrastructure'
 
 on: 
-  push:
-    branches:
-      - main
-    paths:
-      - 'infrastructure/**'
-  workflow_dispatch:
+    workflow_dispatch:
     inputs:
       infrastructure-action:
         type: choice
