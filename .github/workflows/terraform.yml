@@ -63,7 +63,7 @@ jobs:
              -backend-config="dynamodb_table=terraform-locks"
       - name: Terraform Plan
         if: ${{ inputs.infrastructure-action == 'apply' }}
-        run: terraform plan -var-file=./env/${{ inputs.environment }}.tfvars -out=tfplan
+        run: terraform plan -var-file=./env/${{ inputs.environment }}.tfvars -out=tfplan -lock=false
       - name: Terraform Apply
         if: ${{ inputs.infrastructure-action == 'apply' }}
         run: terraform apply -auto-approve tfplan
