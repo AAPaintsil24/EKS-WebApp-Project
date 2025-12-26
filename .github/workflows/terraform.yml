@@ -61,10 +61,10 @@ jobs:
              -backend-config="region=${{ inputs.aws-region }}" \
              -backend-config="key=albertdevops/terraform/dev/statefile.tfstate" \
              -backend-config="dynamodb_table=terraform-locks"
-      
+    
       - name: Terraform Apply
         if: ${{ inputs.infrastructure-action == 'apply' }}
-        run: terraform apply -auto-approve tfplan
+        run: terraform apply -auto-approve 
 
       - name: Terraform Destroy
         if: ${{ inputs.infrastructure-action == 'destroy' }}
