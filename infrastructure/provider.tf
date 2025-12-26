@@ -7,11 +7,11 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "my-terraform-backend-albert"
-    region = "eu-north-1"
-    encrypt = true
-    use_lockfile = true
+    bucket         = "my-terraform-backend-albert"
+    region         = "eu-north-1"
+    encrypt        = true
     dynamodb_table = "terraform-locks"
+  }
     
     versioning {
       enabled = true
