@@ -10,15 +10,20 @@ on:
     inputs:
       infrastructure-action:
         type: choice
-        description: "select infrastructure action"
+        description: "Select infrastructure action"
         options:
           - apply
           - destroy
         required: true
+      
+      aws-region:
+        required: false
+        type: string
+        default: 'eu-central-1'
 
       environment:
-        description: "select environment"
         type: choice
+        description: "Select environment"
         options:
           - dev
           - prod
@@ -27,33 +32,38 @@ on:
 permissions:
   id-token: write
   contents: read
+
 jobs: 
   deploy_infra:
-    name: Install ubuntu
     runs-on: ubuntu-latest
     defaults: 
       run: 
-        working-directory: infrastructure/env/${{ github.event.inputs.environment }}
+        working-directory: ./infrastructure   # run from root
 
     steps:
-      - name: Check out repository code
+      - name: Checkout repo
         uses: actions/checkout@v6
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws_region: ${{ inputs.aws-region }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
         run: terraform init
-      
+
       - name: Terraform Plan
         if: ${{ github.event.inputs.infrastructure-action == 'apply' }}
-        run: terraform plan -out=tfplan
+        run: terraform plan -var-file=./env/${{ github.event.inputs.environment }}.tfvars -out=tfplan
 
       - name: Terraform Apply
         if: ${{ github.event.inputs.infrastructure-action == 'apply' }}
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve tfplan
 
       - name: Terraform Destroy
         if: ${{ github.event.inputs.infrastructure-action == 'destroy' }}
-        run: terraform destroy -auto-approve
-
+        run: terraform destroy -auto-approve -var-file=./env/${{ github.event.inputs.environment }}.tfvars

@@ -8,13 +8,15 @@ terraform {
 
   backend "s3" {
     bucket = "my-terraform-backend-albert"
-    key    = "albertdevops/terraform/dev/statefile.tfstate"
+    key    = "albertdevops/terraform/${var.env}/statefile.tfstate"
     region = "eu-north-1"
+    encrypt = true
+    use_lockfile = true
   }
+
+  
 }
 
 provider "aws" {
-  region  = "eu-north-1"
-  profile = "dev" # optional if using AWS CLI profile
+  region = var.aws_region
 }
-
