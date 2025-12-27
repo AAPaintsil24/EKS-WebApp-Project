@@ -32,7 +32,7 @@ resource "aws_subnet" "private" {
   for_each = local.private_subnets
   vpc_id   = aws_vpc.main.id
   cidr_block = each.value
-  availability_zone = split("-", each.key)[0]
+  availability_zone = substr(each.key, 0, length(each.key) - 4) 
 
   tags = {
     Name = "${var.name_prefix}-private-${each.key}"
