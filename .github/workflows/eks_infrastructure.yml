@@ -60,7 +60,7 @@ jobs:
         working-directory: ./infrastructure
         continue-on-error: true  # Don't fail if no lock exists
         run: |
-            terraform force-unlock 10490891-e7e3-72dc-c8bf-a8e2509eceba       
+            echo "yes" | terraform force-unlock 10490891-e7e3-72dc-c8bf-a8e2509eceba       
              
       - name: Terraform Plan
         if: ${{ inputs.infrastructure-action == 'apply' }}
