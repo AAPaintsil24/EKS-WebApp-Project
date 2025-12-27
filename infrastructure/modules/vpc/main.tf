@@ -37,7 +37,7 @@ resource "aws_subnet" "private" {
   tags = {
     Name = "${var.name_prefix}-private-${each.key}"
     # Only K8s private subnets get the internal ELB tag
-    kubernetes.io/role/internal-elb = contains(each.key, "k8s") ? "1" : null
+    "kubernetes.io/role/internal-elb" = contains(each.key, "k8s") ? "1" : null
   }
 }
 
@@ -73,7 +73,7 @@ resource "aws_route_table_association" "public" {
 ### NAT Gateway
 ###################################
 resource "aws_eip" "nat" {
-  vpc = true
+  domain = "vpc"  # Fixed: Changed from vpc = true
   tags = { Name = "${var.name_prefix}-nat-eip" }
 }
 
@@ -103,7 +103,4 @@ resource "aws_route_table_association" "private" {
   subnet_id      = each.value.id
   route_table_id = aws_route_table.private.id
 }
-
-
-
 
