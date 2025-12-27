@@ -10,7 +10,7 @@ terraform {
     bucket         = "my-terraform-backend-albert"
     region         = "eu-north-1"
     encrypt        = true
-    dynamodb_table = "terraform-locks"
+    use_lockfile   = true
   }
     
     
