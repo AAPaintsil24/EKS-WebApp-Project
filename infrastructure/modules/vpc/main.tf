@@ -37,7 +37,7 @@ resource "aws_subnet" "private" {
   tags = {
     Name = "${var.name_prefix}-private-${each.key}"
     # Only K8s private subnets get the internal ELB tag
-    "kubernetes.io/role/internal-elb" = can(regex("k8s", each.key)) ? "1" : null
+    "kubernetes.io/role/internal-elb" = length(regexall("k8s", each.key)) > 0 ? "1" : null
   }
 }
 
