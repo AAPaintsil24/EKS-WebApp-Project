@@ -7,9 +7,9 @@ output "public_subnet_ids" {
 }
 
 output "private_k8s_subnet_ids" {
-  value = [for k, s in aws_subnet.private : s.id if contains(k, "k8s")]
+  value = [for k, s in aws_subnet.private : s.id if length(regexall("k8s", k)) > 0]
 }
 
 output "private_db_subnet_ids" {
-  value = [for k, s in aws_subnet.private : s.id if contains(k, "db")]
+  value = [for k, s in aws_subnet.private : s.id if length(regexall("db", k)) > 0]
 }

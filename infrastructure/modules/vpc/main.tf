@@ -32,7 +32,7 @@ resource "aws_subnet" "private" {
   for_each = local.private_subnets
   vpc_id   = aws_vpc.main.id
   cidr_block = each.value
-  availability_zone = substr(each.key, 0, length(each.key) - 4) 
+  availability_zone = substr(each.key, 0, length(each.key) - 4)
 
   tags = {
     Name = "${var.name_prefix}-private-${each.key}"
@@ -73,7 +73,7 @@ resource "aws_route_table_association" "public" {
 ### NAT Gateway
 ###################################
 resource "aws_eip" "nat" {
-  domain = "vpc"  # Fixed: Changed from vpc = true
+  domain = "vpc"
   tags = { Name = "${var.name_prefix}-nat-eip" }
 }
 
@@ -103,4 +103,3 @@ resource "aws_route_table_association" "private" {
   subnet_id      = each.value.id
   route_table_id = aws_route_table.private.id
 }
-
