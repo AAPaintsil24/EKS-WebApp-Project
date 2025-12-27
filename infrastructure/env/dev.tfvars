@@ -1,9 +1,8 @@
 aws_region = "eu-north-1"
-name_prefix = "albert-dev"
 env = "dev"
-vpc_cidr = "10.0.0.0/23"
+vpc_cidr = "10.0.0.0/22"
 availability_zones = ["eu-north-1a", "eu-north-1b"]
-public_subnets_cidrs = ["10.0.0.0/26", "10.0.0.64/26"]
-private_subnet_cidrs = ["10.0.0.128/26", "10.0.0.192/26", "10.0.1.0/26", "10.0.1.64/26"]
-key_name = "albert_key_dev"
-instance_type = "t3.micro"
+public_subnets_cidrs = ["10.0.0.0/24", "10.0.1.0/24"]
+private_k8s_subnets_cidrs = ["10.0.2.0/25", "10.0.2.128/25"]
+private_db_subnets_cidrs = ["10.0.3.0/25", "10.0.3.128/25"]
+name_prefix = "albertdev"
