@@ -1,21 +1,15 @@
 name: 'Infrastructure'
 
-on: 
-  push:
-    branches:
-      - main
-    paths:
-      - 'infrastructure/**'
   workflow_dispatch:
     inputs:
       infrastructure-action:
         type: choice
         description: "Select infrastructure action"
+        required: true
         options:
           - apply
           - destroy
-        required: true
-      
+        
       aws-region:
         required: false
         type: string
