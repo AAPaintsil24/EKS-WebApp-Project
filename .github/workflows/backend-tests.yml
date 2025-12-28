@@ -1,0 +1,45 @@
+name: Backend Services Tests
+
+on: 
+  push: 
+    branches: 
+      - main
+
+jobs:
+  test-auth-service:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: apps/backend/auth-service/package-lock.json
+      
+      - name: Install auth-service dependencies
+        run: cd apps/backend/auth-service && npm ci
+      
+      - name: Run auth-service tests
+        run: cd apps/backend/auth-service && npm test
+
+  test-order-service:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: apps/backend/order-service/package-lock.json
+      
+      - name: Install order-service dependencies
+        run: cd apps/backend/order-service && npm ci
+      
+      - name: Run order-service tests
+        run: cd apps/backend/order-service && npm test
