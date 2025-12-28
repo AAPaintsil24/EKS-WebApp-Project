@@ -1,8 +1,7 @@
 name: Backend Services Tests
-
-on: 
-  push: 
-    branches: 
+on:
+  push:
+    branches:
       - main
 
 jobs:

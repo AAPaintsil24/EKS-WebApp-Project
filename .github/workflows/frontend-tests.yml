@@ -1,7 +1,7 @@
 name: Frontend Tests
-on: 
-  push: 
-    branches: 
+on:
+  push:
+    branches:
       - main
 
 jobs:
@@ -23,5 +23,3 @@ jobs:
       
       - name: Run frontend tests
         run: cd apps/frontend && npm test -- --watchAll=false
-
-      
