@@ -16,11 +16,8 @@ jobs:
         with:
           node-version: '18'
           
-        
-      
       - name: Install auth-service dependencies
-        run: cd apps/backend/auth-service && npm ci
-      
+        run: cd apps/backend/auth-service && npm install
       - name: Run auth-service tests
         run: cd apps/backend/auth-service && npm test
 
@@ -38,7 +35,7 @@ jobs:
           cache-dependency-path: apps/backend/order-service/package-lock.json
       
       - name: Install order-service dependencies
-        run: cd apps/backend/order-service && npm ci
+        run: cd apps/backend/order-service && npm install
       
       - name: Run order-service tests
         run: cd apps/backend/order-service && npm test
