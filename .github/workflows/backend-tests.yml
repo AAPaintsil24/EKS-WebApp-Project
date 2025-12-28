@@ -31,8 +31,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: apps/backend/order-service/package-lock.json
       
       - name: Install order-service dependencies
         run: cd apps/backend/order-service && npm install
