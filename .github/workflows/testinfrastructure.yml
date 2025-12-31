@@ -1,0 +1,63 @@
+name: 'Infrastructure'
+
+on:
+  workflow_dispatch:
+    inputs:
+      infrastructure-action:
+        type: choice
+        description: "Select infrastructure action"
+        required: true
+        options:
+          - apply
+          - destroy
+        
+      aws-region:
+        required: false
+        type: string
+        default: 'eu-north-1'
+
+      environment:
+        type: choice
+        description: "Select environment"
+        options:
+          - dev
+          - prod
+        required: true
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs: 
+  deploy_infra:
+    runs-on: ubuntu-latest
+    defaults: 
+      run: 
+        working-directory: ./infrastructure   # run from root
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ inputs.aws-region }}  
+
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: |
+           terraform init -upgrade \
+             -backend-config="bucket=my-terraform-backend-albert" \
+             -backend-config="region=${{ inputs.aws-region }}" \
+             -backend-config="key=albertdevops/terraform/${{ inputs.environment }}/statefile.tfstate"
+
+          
+             
+      - name: Terraform Plan
+        if: ${{ inputs.infrastructure-action == 'apply' }}
+        run: terraform plan -var-file=./env/${{ inputs.environment }}.tfvars -out=tfplan -lock=false
