@@ -13,3 +13,14 @@ output "private_k8s_subnet_ids" {
 output "private_db_subnet_ids" {
   value = module.vpc.private_db_subnet_ids
 }
+
+output "db_endpoint" {
+  description = "RDS database endpoint"
+  value       = module.rds.db_endpoint
+  sensitive   = false
+}
+
+output "db_security_group_id" {
+  description = "RDS security group ID"
+  value       = module.rds.db_security_group_id
+}
