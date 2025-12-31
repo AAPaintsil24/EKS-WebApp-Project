@@ -37,3 +37,41 @@ variable "name_prefix" {
   description = "Prefix for resource names"
   type        = string
 }
+
+# Database variables
+variable "db_name" {
+  type    = string
+  default = "appdb"
+}
+
+variable "db_username" {
+  type      = string
+  sensitive = true
+  default   = "admin"
+}
+
+variable "db_password" {
+  type      = string
+  sensitive = true
+  default   = ""
+}
+
+variable "db_instance_class" {
+  type    = string
+  default = "db.t3.micro"
+}
+
+variable "db_engine" {
+  type    = string
+  default = "postgres"
+}
+
+variable "db_engine_version" {
+  type    = string
+  default = "15.4"
+}
+
+variable "db_multi_az" {
+  type    = bool
+  default = false
+}

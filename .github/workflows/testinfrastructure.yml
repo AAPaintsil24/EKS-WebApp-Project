@@ -1,4 +1,4 @@
-name: 'Infrastructure'
+name: 'Test Infrastructure'
 
 on:
   workflow_dispatch:
@@ -29,7 +29,7 @@ permissions:
   contents: read
 
 jobs: 
-  deploy_infra:
+  test_infra:
     runs-on: ubuntu-latest
     defaults: 
       run: 
