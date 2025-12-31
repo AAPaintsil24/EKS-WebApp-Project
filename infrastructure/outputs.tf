@@ -24,3 +24,9 @@ output "db_security_group_id" {
   description = "RDS security group ID"
   value       = module.rds.db_security_group_id
 }
+
+output "db_secret_arn" {
+  description = "ARN of the database secret in Secrets Manager"
+  value       = aws_secretsmanager_secret.db_credentials.arn
+  sensitive   = true
+}

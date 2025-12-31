@@ -50,11 +50,6 @@ variable "db_username" {
   default   = "admin"
 }
 
-variable "db_password" {
-  type      = string
-  sensitive = true
-  default   = ""
-}
 
 variable "db_instance_class" {
   type    = string
