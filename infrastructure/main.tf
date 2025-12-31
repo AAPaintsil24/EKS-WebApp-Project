@@ -12,8 +12,9 @@ module "vpc" {
 module "rds" {
   source = "./modules/rds"
   
+  
   name_prefix = var.name_prefix
-  environment = var.environment
+  environment = var.env  # Changed from var.environment
   
   vpc_id       = module.vpc.vpc_id
   db_subnet_ids = module.vpc.private_db_subnet_ids
@@ -28,8 +29,3 @@ module "rds" {
   
   multi_az = var.db_multi_az
 }
-
-
-
-
-
