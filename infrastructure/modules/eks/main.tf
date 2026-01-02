@@ -277,8 +277,8 @@ resource "aws_eks_cluster" "main" {
 
   # DEPENDS ON: IAM role must exist first
   depends_on = [
-    aws_iam_role_policy_attachment.cluster_AmazonEKSClusterPolicy,
-    aws_iam_role_policy_attachment.cluster_AmazonEKSVPCResourceController,
+  aws_iam_role_policy_attachment.cluster_AmazonEKSClusterPolicy,  # This exists ✓
+  aws_iam_role_policy_attachment.cluster_vpc,  # ← Change to match YOUR name
   ]
 }
 
@@ -391,8 +391,8 @@ resource "aws_eks_node_group" "main" {
   }
 
   depends_on = [
-    aws_iam_role_policy_attachment.node_AmazonEKSWorkerNodePolicy,
-    aws_iam_role_policy_attachment.node_AmazonEKS_CNI_Policy,
-    aws_iam_role_policy_attachment.node_AmazonEC2ContainerRegistryReadOnly,
+  aws_iam_role_policy_attachment.node_AmazonEKSWorkerNodePolicy,  
+  aws_iam_role_policy_attachment.node_AmazonEKS_CNI_Policy,           
+  aws_iam_role_policy_attachment.node_AmazonEC2ContainerRegistryReadOnly, 
   ]
 }
