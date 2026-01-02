@@ -23,6 +23,7 @@ module "eks" {
   
   # EKS Configuration (CORRECT)
   kubernetes_version = var.kubernetes_version
+}
 
 # Generate random password
 resource "random_password" "db_password" {
