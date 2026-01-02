@@ -308,7 +308,7 @@ resource "aws_eks_addon" "coredns" {
   # Use version compatible with your Kubernetes version
   addon_version = var.addon_versions.coredns
   
-  resolve_conflicts = "OVERWRITE"
+  
   
   tags = {
     Name        = "${var.name_prefix}-${var.environment}-coredns-addon"
@@ -325,7 +325,7 @@ resource "aws_eks_addon" "kube_proxy" {
   
   addon_version = var.addon_versions.kube_proxy
   
-  resolve_conflicts = "OVERWRITE"
+  
   
   tags = {
     Name        = "${var.name_prefix}-${var.environment}-kube-proxy-addon"
@@ -342,7 +342,7 @@ resource "aws_eks_addon" "vpc_cni" {
   
   addon_version = var.addon_versions.vpc_cni
   
-  resolve_conflicts = "OVERWRITE"
+  
   
   tags = {
     Name        = "${var.name_prefix}-${var.environment}-vpc-cni-addon"
@@ -391,8 +391,8 @@ resource "aws_eks_node_group" "main" {
   }
 
   depends_on = [
-  aws_iam_role_policy_attachment.node_AmazonEKSWorkerNodePolicy,  
-  aws_iam_role_policy_attachment.node_AmazonEKS_CNI_Policy,           
-  aws_iam_role_policy_attachment.node_AmazonEC2ContainerRegistryReadOnly, 
-  ]
+  aws_iam_role_policy_attachment.node_worker,  
+  aws_iam_role_policy_attachment.node_cni,     
+  aws_iam_role_policy_attachment.node_ecr,     
+   ]
 }
