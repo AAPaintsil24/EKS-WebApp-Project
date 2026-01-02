@@ -19,11 +19,11 @@ resource "random_password" "db_password" {
 
 # Store in Secrets Manager
 resource "aws_secretsmanager_secret" "db_credentials" {
-  name        = "${var.name_prefix}-${var.env}/rds/credentials"
+  name        = "${var.name_prefix}-${var.environment}/rds/credentials"
   description = "Database credentials"
   
   tags = {
-    Environment = var.env
+    Environment = var.environment
     Project     = var.name_prefix
   }
 }
@@ -44,7 +44,7 @@ module "rds" {
   source = "./modules/rds"
   
   name_prefix = var.name_prefix
-  environment = var.env
+  environment = var.environment
   
   vpc_id       = module.vpc.vpc_id
   db_subnet_ids = module.vpc.private_db_subnet_ids

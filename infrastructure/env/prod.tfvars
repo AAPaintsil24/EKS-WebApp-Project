@@ -1,5 +1,5 @@
 aws_region = "eu-north-1"
-env = "prod"
+environment = "prod"
 vpc_cidr = "10.0.0.0/22"
 availability_zones = ["eu-north-1a", "eu-north-1b"]
 public_subnets_cidrs = ["10.0.0.0/24", "10.0.1.0/24"]

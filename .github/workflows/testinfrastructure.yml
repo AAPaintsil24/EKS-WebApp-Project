@@ -3,19 +3,15 @@ name: 'Test Infrastructure'
 on:
   workflow_dispatch:
     inputs:
-      infrastructure-action:
+      action:
         type: choice
-        description: "Select infrastructure action"
+        description: "Plan or Apply?"
         required: true
         options:
+          - plan
           - apply
           - destroy
         
-      aws-region:
-        required: false
-        type: string
-        default: 'eu-north-1'
-
       environment:
         type: choice
         description: "Select environment"
@@ -29,11 +25,11 @@ permissions:
   contents: read
 
 jobs: 
-  test_infra:
+  terraform:
     runs-on: ubuntu-latest
     defaults: 
       run: 
-        working-directory: ./infrastructure   # run from root
+        working-directory: ./infrastructure
 
     steps:
       - name: Checkout repo
@@ -43,21 +39,26 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: ${{ inputs.aws-region }}  
-
+          aws-region: eu-north-1
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
         run: |
-           terraform init -upgrade \
-             -backend-config="bucket=my-terraform-backend-albert" \
-             -backend-config="region=${{ inputs.aws-region }}" \
-             -backend-config="key=albertdevops/terraform/${{ inputs.environment }}/statefile.tfstate"
+          terraform init -upgrade \
+            -backend-config="bucket=my-terraform-backend-albert" \
+            -backend-config="region=eu-north-1" \
+            -backend-config="key=albertdevops/terraform/${{ inputs.environment }}/statefile.tfstate"
 
-          
-             
       - name: Terraform Plan
-        if: ${{ inputs.infrastructure-action == 'apply' }}
-        run: terraform plan -var-file=./env/${{ inputs.environment }}.tfvars -out=tfplan -lock=false
+        if: ${{ inputs.action == 'plan' || inputs.action == 'apply' }}
+        run: terraform plan -var-file=./env/${{ inputs.environment }}.tfvars
+
+      - name: Terraform Apply
+        if: ${{ inputs.action == 'apply' }}
+        run: terraform apply -auto-approve -var-file=./env/${{ inputs.environment }}.tfvars
+
+      - name: Terraform Destroy
+        if: ${{ inputs.action == 'destroy' }}
+        run: terraform destroy -auto-approve -var-file=./env/${{ inputs.environment }}.tfvars
