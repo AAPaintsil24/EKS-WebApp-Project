@@ -75,14 +75,25 @@ output "oidc_provider_arn" {
 
 # ===================== ADDONS OUTPUTS =====================
 output "addon_statuses" {
-  description = "Status of all installed EKS addons"
+  description = "Status of EKS addons"
   value = {
-    coredns   = aws_eks_addon.coredns.status
-    kube_proxy = aws_eks_addon.kube_proxy.status
-    vpc_cni   = aws_eks_addon.vpc_cni.status
+    coredns = {
+      arn      = aws_eks_addon.coredns.arn
+      version  = aws_eks_addon.coredns.addon_version
+      name     = aws_eks_addon.coredns.addon_name
+    }
+    kube_proxy = {
+      arn      = aws_eks_addon.kube_proxy.arn
+      version  = aws_eks_addon.kube_proxy.addon_version
+      name     = aws_eks_addon.kube_proxy.addon_name
+    }
+    vpc_cni = {
+      arn      = aws_eks_addon.vpc_cni.arn
+      version  = aws_eks_addon.vpc_cni.addon_version
+      name     = aws_eks_addon.vpc_cni.addon_name
+    }
   }
 }
-
 # ===================== NODE GROUPS OUTPUTS =====================
 output "node_group_names" {
   description = "Names of all EKS node groups"
