@@ -13,22 +13,16 @@ module "vpc" {
 module "eks" {
   source = "./modules/eks"
   
-  # Identification
+  # Basic identification (CORRECT)
   name_prefix = var.name_prefix
   environment = var.environment
   
-  # Network from VPC
-  vpc_id                    = module.vpc.vpc_id
-  private_k8s_subnet_ids    = module.vpc.private_k8s_subnet_ids
-  private_k8s_subnets_cidrs = var.private_k8s_subnets_cidrs
+  # Network from VPC (CORRECT)
+  vpc_id                 = module.vpc.vpc_id
+  private_k8s_subnet_ids = module.vpc.private_k8s_subnet_ids
   
-  # EKS Configuration
+  # EKS Configuration (CORRECT)
   kubernetes_version = var.kubernetes_version
-  node_instance_type = var.node_instance_type
-  desired_node_count = 2
-  max_node_count     = 4
-  min_node_count     = 1
-}
 
 # Generate random password
 resource "random_password" "db_password" {
