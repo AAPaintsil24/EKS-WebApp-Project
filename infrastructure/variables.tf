@@ -70,3 +70,9 @@ variable "db_multi_az" {
   type    = bool
   default = false
 }
+
+variable "kubernetes_version" {
+  description = "Kubernetes version for EKS cluster"
+  type        = string
+  default     = "1.34"  # Same as module default
+}
