@@ -1,3 +1,4 @@
+const { Pool } = require("pg");
 const pool = new Pool({
   host: process.env.DB_HOST,   // placeholder
   port: process.env.DB_PORT,   // placeholder
