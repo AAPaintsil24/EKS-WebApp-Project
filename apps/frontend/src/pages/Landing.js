@@ -7,3 +7,4 @@ export default function Landing({ setPage }) {
     </div>
   );
 }
+
