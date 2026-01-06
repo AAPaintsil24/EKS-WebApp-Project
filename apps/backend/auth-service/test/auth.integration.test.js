@@ -1,5 +1,16 @@
 const request = require("supertest");
+const fs = require("fs");
+const path = require("path");
 const app = require("../src/server");
+const db = require("../src/db");
+
+beforeAll(async () => {
+  const sql = fs.readFileSync(
+    path.join(__dirname, "../sql/init.sql"),
+    "utf8"
+  );
+  await db.query(sql);
+});
 
 describe("Auth API – Integration", () => {
   test("Signup inserts user into database", async () => {
