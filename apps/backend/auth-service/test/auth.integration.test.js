@@ -26,3 +26,7 @@ describe("Auth API – Integration", () => {
     expect(res.body.username).toBe("integration_user");
   });
 });
+
+afterAll(async () => {
+  await db.end();
+});
