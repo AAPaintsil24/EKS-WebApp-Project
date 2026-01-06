@@ -8,7 +8,7 @@ private_db_subnets_cidrs = ["10.0.3.0/25", "10.0.3.128/25"]
 name_prefix = "albertprod"
 
 # Database configuration
-db_name            = "appdb"
+db_name            = "albertdb"
 db_username        = "admin"
 db_password        = ""  # Will use Secrets Manager
 db_instance_class  = "db.t3.micro"

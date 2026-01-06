@@ -23,7 +23,7 @@ variable "db_subnet_ids" {
 variable "db_name" {
   description = "Database name (the actual database inside the instance)"
   type        = string
-  default     = "appdb"
+  default     = "albertdb"
 }
 
 variable "db_username" {

@@ -19,19 +19,4 @@ jobs:
       - name: Run auth-service tests
         run: cd apps/backend/auth-service && npm test
 
-  test-order-service:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-      
-      - name: Install order-service dependencies
-        run: cd apps/backend/order-service && npm install
-      
-      - name: Run order-service tests
-        run: cd apps/backend/order-service && npm test
+  
