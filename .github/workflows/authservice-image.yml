@@ -35,12 +35,31 @@ jobs:
         run: |
           docker build -t auth-service:1.0 ./apps/backend/auth-service
 
-      # 2. TAG with full ECR URL
+      # 🔐 2. SECURITY GATE: Scan the image. Job FAILS here if vulnerabilities are found.
+      - name: Scan Image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'auth-service:1.0'
+          format: 'sarif'
+          exit-code: '1' # This makes the job fail on findings
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+          output: 'trivy-results.sarif'
+
+      # (Optional) Upload report to GitHub Security tab for visibility
+      - name: Upload Trivy Results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+    
+
+      # 3. TAG with full ECR URL
       - name: Tag for ECR
         run: |
           docker tag auth-service:1.0 ${{ steps.login-ecr.outputs.registry }}/devops/auth-service:1.0
 
-      # 3. PUSH to ECR
+      # 4. PUSH to ECR
       - name: Push to ECR
         run: |
           docker push ${{ steps.login-ecr.outputs.registry }}/devops/auth-service:1.0

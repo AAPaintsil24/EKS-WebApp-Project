@@ -1,6 +1,27 @@
+# Dependencies and build artifacts
 node_modules
 npm-debug.log
+
+# Version control
 .git
 .gitignore
-README.md
-test/
+
+# Environment files (keep template, ignore real ones)
+.env
+*.env.local
+
+# Local development and IDE files
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test files (not needed in production image)
+test
+__tests__
+*.test.js
+*.spec.js

@@ -1,6 +1,13 @@
 node_modules
-npm-debug.log
+build/
+__tests__
+*.test.js
+setupTests.js
+.env
+.env.local
 .git
 .gitignore
-README.md
-test/
+.vscode
+.idea
+.DS_Store
+npm-debug.log
