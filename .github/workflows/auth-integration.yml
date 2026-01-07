@@ -2,8 +2,7 @@ name: Auth Service Integration Tests
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
+  
 
 jobs:
   integration-test:
