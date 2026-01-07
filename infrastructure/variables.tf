@@ -50,6 +50,12 @@ variable "db_username" {
   default   = "admin"
 }
 
+variable "db_password" {
+  description = "Database password (optional - will be auto-generated if omitted)"
+  type        = string
+  sensitive   = true
+  default     = null
+}
 
 variable "db_instance_class" {
   type    = string
