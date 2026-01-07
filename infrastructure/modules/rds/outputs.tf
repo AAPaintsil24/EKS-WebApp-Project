@@ -37,3 +37,9 @@ output "db_subnet_group_name" {
   description = "Name of the DB subnet group"
   value       = aws_db_subnet_group.main.name
 }
+
+output "db_secret_arn" {
+  description = "ARN of the database secret in Secrets Manager"
+  value       = aws_secretsmanager_secret.db_credentials.arn
+  sensitive   = true
+}

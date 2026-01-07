@@ -25,34 +25,6 @@ module "eks" {
   kubernetes_version = var.kubernetes_version
 }
 
-# Generate random password
-resource "random_password" "db_password" {
-  length           = 16
-  special          = true
-  override_special = "!@#$%&*()-_=+[]{}<>:?"
-}
-
-# Store in Secrets Manager
-resource "aws_secretsmanager_secret" "db_credentials" {
-  name        = "${var.name_prefix}-${var.environment}/rds/credentials"
-  description = "Database credentials"
-  
-  tags = {
-    Environment = var.environment
-    Project     = var.name_prefix
-  }
-}
-
-resource "aws_secretsmanager_secret_version" "db_credentials" {
-  secret_id = aws_secretsmanager_secret.db_credentials.id
-  secret_string = jsonencode({
-    username = var.db_username
-    password = random_password.db_password.result
-    engine   = var.db_engine
-    port     = 5432
-    dbname   = var.db_name
-  })
-}
 
 # RDS Module - UPDATED to use generated password
 module "rds" {
@@ -66,7 +38,7 @@ module "rds" {
   
   db_name     = var.db_name
   db_username = var.db_username
-  db_password = random_password.db_password.result  # Use generated password
+  # db_password optional - module will generate if omitted
   
   instance_class = var.db_instance_class
   engine         = var.db_engine

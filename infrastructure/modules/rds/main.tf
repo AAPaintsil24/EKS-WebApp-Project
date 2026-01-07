@@ -35,6 +35,37 @@ resource "aws_security_group" "rds" {
   }
 }
 
+# Generate random password
+resource "random_password" "db_password" {
+  length           = 16
+  special          = true
+  override_special = "!@#$%&*()-_=+[]{}<>:?"
+}
+
+# Store in Secrets Manager
+resource "aws_secretsmanager_secret" "db_credentials" {
+  name        = "${var.name_prefix}-${var.environment}/rds/credentials"
+  description = "Database credentials"
+  
+  tags = {
+    Environment = var.environment
+    Project     = var.name_prefix
+  }
+}
+
+
+resource "aws_secretsmanager_secret_version" "db_credentials" {
+  secret_id = aws_secretsmanager_secret.db_credentials.id
+  secret_string = jsonencode({
+    username = var.db_username
+    password = random_password.db_password.result
+    engine   = var.engine
+    port     = local.db_port
+    dbname   = var.db_name
+  })
+}
+
+
 # Create the RDS Database Instance
 resource "aws_db_instance" "main" {
   identifier = "${var.name_prefix}-${var.environment}-db"
@@ -50,7 +81,7 @@ resource "aws_db_instance" "main" {
   
   db_name  = var.db_name
   username = var.db_username
-  password = var.db_password
+  password = var.db_password != null ? var.db_password : random_password.db_password.result
   port     = local.db_port
   
   db_subnet_group_name   = aws_db_subnet_group.main.name

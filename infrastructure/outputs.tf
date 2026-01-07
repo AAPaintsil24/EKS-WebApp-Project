@@ -27,6 +27,6 @@ output "db_security_group_id" {
 
 output "db_secret_arn" {
   description = "ARN of the database secret in Secrets Manager"
-  value       = aws_secretsmanager_secret.db_credentials.arn
+  value       = module.rds.db_secret_arn
   sensitive   = true
 }
