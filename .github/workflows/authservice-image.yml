@@ -19,6 +19,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
       
+      - name: Clean and Update Dependencies
+        run: |
+          cd apps/backend/auth-service
+          # Clean current node_modules to force fresh install
+          rm -rf node_modules
+          # Update ALL packages to latest compatible versions
+          npm update --save  
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
