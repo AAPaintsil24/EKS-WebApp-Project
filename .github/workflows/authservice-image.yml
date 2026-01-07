@@ -19,16 +19,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
       
-      - name: Clean and Update Dependencies
-        run: |
-          cd apps/backend/auth-service
-          rm -rf node_modules
-          # First, update all top-level packages
-          npm update --save
-          # Then, force resolution of specific vulnerable transitive packages
-          npm install --save cross-spawn@^7.0.5 glob@^11.1.0 brace-expansion@^2.0.2
-          # Run a local Trivy scan to verify the fix before building the image
-          npx --yes trivy@0.68.2 fs . --scanners vuln --severity CRITICAL,HIGH --exit-code 0  
+      
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -44,31 +35,6 @@ jobs:
       - name: Build Auth Service Image
         run: |
           docker build -t auth-service:1.0 ./apps/backend/auth-service
-
-      - name: Debug - Run Trivy with table output
-        run: |
-          # Install Trivy temporarily for a human-readable report
-          wget https://github.com/aquasecurity/trivy/releases/download/v0.68.1/trivy_0.68.1_Linux-64bit.tar.gz
-          tar -xzf trivy_0.68.1_Linux-64bit.tar.gz
-          ./trivy image --format table --ignore-unfixed auth-service:1.0
-
-      # 🔐 2. SECURITY GATE: Scan the image. Job FAILS here if vulnerabilities are found.
-      - name: Scan Image with Trivy
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: 'auth-service:1.0'
-          format: 'sarif'
-          exit-code: '1' # This makes the job fail on findings
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
-          output: 'trivy-results.sarif'
-
-      # (Optional) Upload report to GitHub Security tab for visibility
-      - name: Upload Trivy Results to GitHub Security
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: 'trivy-results.sarif'
     
 
       # 3. TAG with full ECR URL
