@@ -1,10 +1,10 @@
 aws_region = "eu-north-1"
 environment = "prod"
-vpc_cidr = "10.0.0.0/22"
+vpc_cidr = "10.0.0.0/25"
 availability_zones = ["eu-north-1a", "eu-north-1b"]
-public_subnets_cidrs = ["10.0.0.0/24", "10.0.1.0/24"]
-private_k8s_subnets_cidrs = ["10.0.2.0/25", "10.0.2.128/25"]
-private_db_subnets_cidrs = ["10.0.3.0/25", "10.0.3.128/25"]
+public_subnets_cidrs = ["10.0.0.1/28", "10.0.0.16/28"]
+private_k8s_subnets_cidrs = ["10.0.0.32/27", "10.0.0.64/27"]
+private_db_subnets_cidrs = ["10.0.0.96/28", "10.0.3.112/28"]
 name_prefix = "albertprod"
 
 # Database configuration

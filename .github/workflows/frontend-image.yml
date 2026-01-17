@@ -35,8 +35,6 @@ jobs:
       - name: Build Frontend Image
         run: |
           docker build -t frontend:1.0 ./apps/frontend
-
-
     
       # 3. TAG with full ECR URL  
       - name: Tag for ECR
