@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "name" . }}-deployment
+  labels:
+    app: {{ include "name" . }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ include "name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "name" . }}
+    spec:
+      imagePullSecrets:
+      - name: ecr-auth
+      containers:
+      - name: auth-service
+        image: {{ include "image" . }}
+        ports:
+        - containerPort: 4000
+        env:
+        - name: db_username
+          valueFrom:
+            secretKeyRef:
+              name: auth-service-db-secret
+              key: DATABASE_USER
+        - name: db_password 
+          valueFrom:
+            secretKeyRef:
+              name: auth-service-db-secret
+              key: DATABASE_PASSWORD
+        - name: db_endpoint
+          valueFrom:
+            configMapKeyRef:
+              name: auth-service-config
+              key: DATABASE_HOST
+        - name: db_name
+          valueFrom:
+            configMapKeyRef:
+              name: auth-service-config
+              key: DATABASE_NAME
