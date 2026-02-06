@@ -71,12 +71,58 @@ npm install
 npm start  # Listens on http://localhost:4000
 npm test
 
-
 ---
 
 ## Application Flow
+Client (Browser)
+|
+v
+Frontend (React + Nginx)
+|
+v
+Backend (Node.js Auth Service)
+|
+v
+Relational Database (Users Table)
 
 
+---
 
+## Backend: Authentication Service
 
+The backend is a lightweight **Express.js API** responsible for:
 
+- User registration
+- User authentication
+- Secure password hashing
+- Database persistence
+
+### Runtime Details
+
+- **Docker Image:** `node:18-alpine`
+- **Listening Port:** `4000`
+- **Database:** PostgreSQL
+- **Schema File:** `sql/init.sql`
+
+---
+
+### Backend Dependencies
+
+| Package     | Purpose                       | Version   |
+|------------|-------------------------------|-----------|
+| express    | HTTP server framework         | ^4.18.2  |
+| bcrypt     | Password hashing              | ^5.1.0   |
+| pg         | PostgreSQL client             | ^8.11.1  |
+| cors       | Cross-origin support          | ^2.8.5   |
+| jest       | Testing framework             | ^29.6.1  |
+| supertest  | API integration testing       | ^6.3.3   |
+
+---
+
+### Backend Development
+
+```bash
+cd apps/backend/auth-service
+npm install
+npm start    # http://localhost:4000
+npm test
