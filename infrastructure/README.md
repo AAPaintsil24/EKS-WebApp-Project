@@ -183,4 +183,20 @@ terraform apply -var-file="env/dev.tfvars"
 
 > **Note:** Ensure database passwords are handled securely (via Secrets Manager or CI/CD secrets).
 
+# CI/CD Considerations
+
+GitHub Actions workflows will use OIDC authentication to assume AWS IAM roles.
+
+**Benefits:**
+
+- No long-lived AWS credentials in repos
+- Fine-grained IAM permissions per environment
+- Easy automation for plan and apply
+
+**Key practices:**
+
+- Store environment-specific TF variables in `env/` folder
+- Use `terraform plan` as a separate workflow step
+- Use `terraform apply` only on main branch or tagged releases
+- Manage sensitive outputs (`db_secret_arn`, cluster CA data) securely
 
