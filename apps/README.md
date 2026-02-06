@@ -79,7 +79,7 @@ The backend is a lightweight **Express.js API** responsible for:
 - **Database:** PostgreSQL
 - **Schema File:** `sql/init.sql`
 
----
+
 
 ### Backend Dependencies
 
@@ -92,7 +92,7 @@ The backend is a lightweight **Express.js API** responsible for:
 | jest       | Testing framework             | ^29.6.1  |
 | supertest  | API integration testing       | ^6.3.3   |
 
----
+
 
 ### Backend Development
 
