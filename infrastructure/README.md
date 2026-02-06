@@ -46,7 +46,7 @@ The infrastructure design includes:
 
 # Directory Structure
 
-```
+`
 infrastructure/
 │-- env/
 │   ├─ dev.tfvars
@@ -59,7 +59,7 @@ infrastructure/
 │-- provider.tf
 │-- variables.tf
 │-- outputs.tf
-```
+`
 - `env/` : Environment-specific variables (dev / prod).  
 - `modules/` : Reusable modules for VPC, EKS, RDS.  
 - `main.tf` : Root module orchestration, linking submodules.  
