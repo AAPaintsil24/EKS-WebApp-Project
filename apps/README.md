@@ -101,7 +101,8 @@ cd apps/backend/auth-service
 npm install
 npm start    # http://localhost:4000
 npm test
-
+```
+---
 
 ## Frontend: React Application
 
