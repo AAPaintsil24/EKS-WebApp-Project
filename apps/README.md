@@ -11,6 +11,7 @@ Both services are Dockerised, independently deployable, and designed for cloud-n
 ---
 
 ## Directory Structure
+```
 apps/
 ├── backend/
 │   └── auth-service/
@@ -41,5 +42,7 @@ apps/
         │   └── Welcome.js
         ├── setupTests.js      # Jest setup
         └── __tests__/         # Component tests
+
+```
 
 
