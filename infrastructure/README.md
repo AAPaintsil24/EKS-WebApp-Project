@@ -147,7 +147,7 @@ private_k8s_subnets_cidrs = ["10.0.0.32/27", "10.0.0.64/27"]
 private_db_subnets_cidrs  = ["10.0.0.96/28", "10.0.0.112/28"]
 aws_region            = "eu-north-1"
 db_username           = "admin"
-db_password           = "dev-secret-password"
+db_password        = ""  # Will use Secrets Manager
 ```
 - Production uses similar values with different name_prefix and security parameters.
 
