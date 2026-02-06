@@ -101,3 +101,25 @@ cd apps/backend/auth-service
 npm install
 npm start    # http://localhost:4000
 npm test
+
+
+## Frontend: React Application
+
+The frontend is a **single-page React application** that communicates with the backend authentication service via HTTP.
+
+### Runtime Details
+
+- **Build Image:** `node:18-alpine`  
+- **Runtime Image:** `nginx:alpine`  
+- **Exposed Port:** `80`  
+
+### Frontend Dependencies
+
+| Package                       | Purpose                  | Version   |
+|-------------------------------|--------------------------|-----------|
+| react                          | UI library               | ^18.2.0  |
+| react-dom                      | DOM rendering            | ^18.2.0  |
+| react-scripts                  | Build tooling            | ^5.0.1   |
+| @testing-library/react         | Component testing        | ^14.0.0  |
+| @testing-library/jest-dom      | DOM assertions           | ^6.0.0   |
+| @testing-library/user-event    | Interaction testing      | ^14.0.0  |
