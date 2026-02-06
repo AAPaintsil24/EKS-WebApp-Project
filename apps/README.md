@@ -46,3 +46,37 @@ apps/
 ```
 
 
+## Backend: Authentication Service
+A lightweight Express.js API that handles user authentication, registration, and session management.
+
+**Docker Image:** `node:18-alpine`  
+**Port:** `4000`  
+**Health Check:** None (consider adding `/health` endpoint)  
+**Database:** PostgreSQL (schema in `sql/init.sql`)
+
+### Backend Dependencies
+| Package | Purpose | Version |
+|---------|---------|---------|
+| express | HTTP server framework | ^4.18.2 |
+| bcrypt | Password hashing | ^5.1.0 |
+| pg | PostgreSQL client | ^8.11.1 |
+| cors | Cross-origin resource sharing | ^2.8.5 |
+| jest | Testing framework | ^29.6.1 |
+| supertest | HTTP integration testing | ^6.3.3 |
+
+### Backend Development
+```bash
+cd apps/backend/auth-service
+npm install
+npm start  # Listens on http://localhost:4000
+npm test
+
+
+---
+
+## Application Flow
+
+
+
+
+
