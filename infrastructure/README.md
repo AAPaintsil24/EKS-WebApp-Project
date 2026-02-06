@@ -42,3 +42,27 @@ The infrastructure design includes:
 - Private networking for sensitive components  
 - Integration with CI/CD automation  
 - Secure secrets handling
+
+
+# Directory Structure
+
+```
+infrastructure/
+│-- env/
+│   ├─ dev.tfvars
+│   └─ prod.tfvars
+│-- modules/
+│   ├─ vpc/
+│   ├─ eks/
+│   └─ rds/
+│-- main.tf
+│-- provider.tf
+│-- variables.tf
+│-- outputs.tf
+```
+- `env/` : Environment-specific variables (dev / prod).  
+- `modules/` : Reusable modules for VPC, EKS, RDS.  
+- `main.tf` : Root module orchestration, linking submodules.  
+- `provider.tf` : AWS provider and S3 remote backend configuration.  
+- `variables.tf` : Global variables for root module.  
+- `outputs.tf` : Root-level outputs for consumption by other stacks or CI/CD.  
