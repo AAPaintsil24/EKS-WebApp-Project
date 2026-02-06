@@ -144,7 +144,7 @@ npm run build
 └─────────────────┘                       └─────────────────┘
 
 ```
-
+---
 ### Database Schema
 ```
 CREATE TABLE users (
@@ -156,16 +156,17 @@ CREATE TABLE users (
 
 ```
 Passwords are stored as bcrypt hashes.
+---
 
-### Development Quick Start
-# Start backend
+# Development Quick Start
+### Start backend
 ```
 cd apps/backend/auth-service
 npm install
 npm start
 ```
 
-# Start frontend (new terminal)
+### Start frontend (new terminal)
 ```
 cd apps/frontend
 npm install
