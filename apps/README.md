@@ -124,3 +124,50 @@ The frontend is a **single-page React application** that communicates with the b
 | @testing-library/react         | Component testing        | ^14.0.0  |
 | @testing-library/jest-dom      | DOM assertions           | ^6.0.0   |
 | @testing-library/user-event    | Interaction testing      | ^14.0.0  |
+
+
+### Frontend Development
+```bash
+cd apps/frontend
+npm install
+npm start    # http://localhost:3000
+npm test
+npm run build
+```
+
+### Service Communication
+```
+┌─────────────────┐     HTTP Requests     ┌─────────────────┐
+│   Frontend      │─────────────────────►│   Auth Service  │
+│   React + Nginx │◄─────────────────────│   Express API   │
+│   Port: 80      │   JSON Responses     │   Port: 4000    │
+└─────────────────┘                       └─────────────────┘
+
+```
+
+### Database Schema
+```
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  username TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL
+);
+
+```
+Passwords are stored as bcrypt hashes.
+
+### Development Quick Start
+# Start backend
+```
+cd apps/backend/auth-service
+npm install
+npm start
+```
+
+# Start frontend (new terminal)
+```
+cd apps/frontend
+npm install
+npm start
+```
