@@ -47,6 +47,8 @@ apps/
 
 
 ## Application Flow
+
+```
 Client (Browser)
 |
 v
@@ -57,7 +59,7 @@ Backend (Node.js Auth Service)
 |
 v
 Relational Database (Users Table)
-
+```
 
 ---
 
