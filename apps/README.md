@@ -158,7 +158,7 @@ CREATE TABLE users (
 Passwords are stored as bcrypt hashes.
 ---
 
-# Development Quick Start
+## Development Quick Start
 ### Start backend
 ```
 cd apps/backend/auth-service
@@ -172,3 +172,20 @@ cd apps/frontend
 npm install
 npm start
 ```
+
+---
+
+## CI/CD Notes
+
+### Backend
+- `npm test` runs Jest test suites
+- Database migrations must run before deployment
+
+### Frontend
+- `npm test` runs component tests
+- `npm run build` generates production assets
+
+### Both Services
+- Stateless by design
+- Configured via environment variables
+- Follow 12-factor application principles
