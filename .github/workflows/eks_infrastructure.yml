@@ -1,21 +1,17 @@
-name: 'Infrastructure'
+name: 'Infrastructure Deployment'
 
 on:
   workflow_dispatch:
     inputs:
-      infrastructure-action:
+      action:
         type: choice
-        description: "Select infrastructure action"
+        description: "Select Terraform action"
         required: true
         options:
+          - plan
           - apply
           - destroy
         
-      aws-region:
-        required: false
-        type: string
-        default: 'eu-north-1'
-
       environment:
         type: choice
         description: "Select environment"
@@ -23,49 +19,82 @@ on:
           - dev
           - prod
         required: true
+      
+      aws-region:
+        description: "AWS region"
+        type: string
+        default: 'eu-north-1'
+        required: false
 
 permissions:
-  id-token: write
-  contents: read
+  id-token: write           # For OIDC authentication
+  contents: read            # For checking out code
+  pull-requests: write       # For commenting plan on PRs (if using PR triggers)
 
-jobs: 
-  deploy_infra:
+jobs:
+  terraform:
+    name: "Terraform ${{ github.event.inputs.action }} - ${{ github.event.inputs.environment }}"
     runs-on: ubuntu-latest
-    defaults: 
-      run: 
-        working-directory: ./infrastructure   # run from root
+    defaults:
+      run:
+        working-directory: ./infrastructure
+    environment: ${{ github.event.inputs.environment }}  # Environment protection
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Configure AWS credentials
+      - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: ${{ inputs.aws-region }}  
-
-
-      - name: Setup Terraform
+          aws-region: ${{ github.event.inputs.aws-region }}
+          role-session-name: "GitHubActions-${{ github.run_id }}"
+      
+      - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
 
+
       - name: Terraform Init
+        id: init
         run: |
-           terraform init -upgrade \
-             -backend-config="bucket=my-terraform-backend-albert" \
-             -backend-config="region=${{ inputs.aws-region }}" \
-             -backend-config="key=albertdevops/terraform/${{ inputs.environment }}/statefile.tfstate"
-
-          
-             
+          terraform init \
+            -backend-config="bucket=my-terraform-backend-albert" \
+            -backend-config="region=${{ github.event.inputs.aws-region }}" \
+            -backend-config="key=albertdevops/terraform/${{ github.event.inputs.environment }}/terraform.tfstate" \
+            
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate
+      
       - name: Terraform Plan
-        if: ${{ inputs.infrastructure-action == 'apply' }}
-        run: terraform plan -var-file=./env/${{ inputs.environment }}.tfvars -out=tfplan -lock=false
-        
-      - name: Terraform Apply
-        if: ${{ inputs.infrastructure-action == 'apply' }}
-        run: terraform apply -auto-approve tfplan
+        id: plan
+        if: ${{ github.event.inputs.action == 'plan' || github.event.inputs.action == 'apply' }}
+        run: |
+          terraform plan \
+            -var-file="./env/${{ github.event.inputs.environment }}.tfvars" \
+            -out=tfplan \
+            
+      - name: Upload Plan Artifact
+        if: ${{ github.event.inputs.action == 'plan' || github.event.inputs.action == 'apply' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan-${{ github.event.inputs.environment }}-${{ github.run_id }}
+          path: ./infrastructure/tfplan
+          retention-days: 7
 
+      - name: Terraform Apply
+        id: apply
+        if: ${{ github.event.inputs.action == 'apply' }}
+        run: terraform apply -auto-approve tfplan
+        env:
+          TF_IN_AUTOMATION: true
       - name: Terraform Destroy
-        if: ${{ inputs.infrastructure-action == 'destroy' }}
-        run: terraform destroy -auto-approve -var-file=./env/${{ inputs.environment }}.tfvars
+        id: destroy
+        if: ${{ github.event.inputs.action == 'destroy' }}
+        run: |
+          echo "⚠️  DESTROYING INFRASTRUCTURE IN ${{ github.event.inputs.environment }} ⚠️"
+          terraform destroy \
+            -var-file="./env/${{ github.event.inputs.environment }}.tfvars" \
+            -auto-approve \     
+      
