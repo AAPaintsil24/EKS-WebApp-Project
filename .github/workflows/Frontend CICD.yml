@@ -1,0 +1,71 @@
+name: Frontend CI/CD
+
+on:
+  workflow_dispatch:
+    inputs:
+      aws-region:
+        description: "AWS Region"
+        required: false
+        type: string
+        default: "eu-north-1"
+
+      image-tag:
+        description: "Docker image tag (e.g. 1.0.0)"
+        required: true
+        type: string
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  test-and-build-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+
+      # Setup Node
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      # Install dependencies
+      - name: Install Frontend Dependencies
+        run: cd apps/frontend && npm install
+
+      # Run tests
+      - name: Run Frontend Tests
+        run: cd apps/frontend && npm test -- --watchAll=false
+
+      # Configure AWS credentials (OIDC)
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ inputs.aws-region }}
+          role-session-name: GitHubActions-${{ github.run_id }}
+
+      # Login to ECR
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # Build Docker image
+      - name: Build Frontend Image
+        run: |
+          docker build -t frontend:${{ inputs.image-tag }} ./apps/frontend
+
+      # Tag image for ECR
+      - name: Tag for ECR
+        run: |
+          docker tag frontend:${{ inputs.image-tag }} \
+          ${{ steps.login-ecr.outputs.registry }}/frontend:${{ inputs.image-tag }}
+
+      # Push image
+      - name: Push to ECR
+        run: |
+          docker push ${{ steps.login-ecr.outputs.registry }}/frontend:${{ inputs.image-tag }}
