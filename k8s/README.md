@@ -1,25 +1,3 @@
-# # 🚀 Project Infrastructure & Deployment
-
-## 📋 Overview
-This project contains a complete cloud-native application with:
-
-- **AWS Infrastructure** (VPC, EKS, RDS) provisioned with Terraform  
-- **Microservices** (Auth Service & Frontend) containerized with Docker  
-- **Kubernetes manifests** managed with Helm  
-- **CI/CD pipelines** with GitHub Actions  
-- **GitOps deployment** with ArgoCD  
-
-## 🏗️ Architecture
-```
-┌─────────────────────────────────────────────────────────────┐
-│                      GitHub Repository                       │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐  │
-│  │  Terraform   │    │   Docker     │    │     Helm     │  │
-│  │Infrastructure│    │   Images     │    │   Manifests  │  │
-│  └──────────────┘    └──────────────┘    └──────────────┘
-```
 # 🚀 Kubernetes Deployment
 
 ## 📋 Overview
