@@ -1,0 +1,10 @@
+apiVersion: v2
+name: my-app
+version: 1.0.0
+dependencies:
+  - name: auth-service
+    version: 1.0.0
+    repository: "file://charts/auth-service"
+  - name: frontend
+    version: 1.0.0
+    repository: "file://charts/frontend"

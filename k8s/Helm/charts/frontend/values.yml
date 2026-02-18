@@ -1,2 +1,3 @@
-image: "260475105124.dkr.ecr.eu-north-1.amazonaws.com/devops/frontend:1.0"
+image: "260475105124.dkr.ecr.eu-north-1.amazonaws.com/frontend:1.0"
 replicas: 4
+apiUrl: "http://{{ .Release.Name }}-auth-service:80"  
