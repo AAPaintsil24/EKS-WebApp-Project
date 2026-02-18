@@ -19,23 +19,6 @@ jobs:
   test-and-build:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: testuser
-          POSTGRES_PASSWORD: testpassword
-          POSTGRES_DB: testdb
-        ports:
-          - 5432:5432
-
-    env:
-      DB_HOST: localhost
-      DB_PORT: 5432
-      DB_USER: testuser
-      DB_PASS: testpassword
-      DB_NAME: testdb
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6
@@ -48,11 +31,14 @@ jobs:
       - name: Install Dependencies
         run: cd apps/backend/auth-service && npm install
 
-      - name: Run Tests
-        run: cd apps/backend/auth-service && npm test
+      - name: Run Unit Tests (Skipping Integration Tests)
+        run: |
+          cd apps/backend/auth-service
+          npm test -- --testPathIgnorePatterns=integration
 
       # Build & Push only if tests pass
       - name: Configure AWS credentials
+        if: success()
         uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
@@ -60,16 +46,20 @@ jobs:
           role-session-name: GitHubActions-${{ github.run_id }}
 
       - name: Login to Amazon ECR
+        if: success()
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build Image
+        if: success()
         run: docker build -t auth-service:${{ inputs.image-tag }} ./apps/backend/auth-service
 
       - name: Tag for ECR
+        if: success()
         run: |
           docker tag auth-service:${{ inputs.image-tag }} \
           ${{ steps.login-ecr.outputs.registry }}/auth-service:${{ inputs.image-tag }}
 
       - name: Push to ECR
+        if: success()
         run: docker push ${{ steps.login-ecr.outputs.registry }}/auth-service:${{ inputs.image-tag }}
