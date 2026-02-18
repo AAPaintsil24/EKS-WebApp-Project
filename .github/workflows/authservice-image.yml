@@ -40,9 +40,9 @@ jobs:
       # 3. TAG with full ECR URL
       - name: Tag for ECR
         run: |
-          docker tag auth-service:1.0 ${{ steps.login-ecr.outputs.registry }}/devops/auth-service:1.0
+          docker tag auth-service:1.0 ${{ steps.login-ecr.outputs.registry }}/auth-service:1.0
 
       # 4. PUSH to ECR
       - name: Push to ECR
         run: |
-          docker push ${{ steps.login-ecr.outputs.registry }}/devops/auth-service:1.0
+          docker push ${{ steps.login-ecr.outputs.registry }}/auth-service:1.0

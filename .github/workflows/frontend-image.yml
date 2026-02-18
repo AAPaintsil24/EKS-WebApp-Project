@@ -39,9 +39,9 @@ jobs:
       # 3. TAG with full ECR URL  
       - name: Tag for ECR
         run: |
-          docker tag frontend:1.0 ${{ steps.login-ecr.outputs.registry }}/devops/frontend:1.0
+          docker tag frontend:1.0 ${{ steps.login-ecr.outputs.registry }}/frontend:1.0
 
       # 4. PUSH to ECR
       - name: Push to ECR
         run: |
-          docker push ${{ steps.login-ecr.outputs.registry }}/devops/frontend:1.0
+          docker push ${{ steps.login-ecr.outputs.registry }}/frontend:1.0
