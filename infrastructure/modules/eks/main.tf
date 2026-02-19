@@ -95,7 +95,8 @@ resource "aws_security_group" "cluster" {
   name        = "${var.name_prefix}-${var.environment}-eks-cluster-sg"
   description = "Security group for EKS control plane - Private API only"
   vpc_id      = var.vpc_id
-
+  
+  
   # Allow all outbound (for cluster to call AWS APIs, etc.)
   egress {
     from_port   = 0
@@ -238,7 +239,8 @@ resource "aws_eks_cluster" "main" {
     
     # SECURITY: Private endpoint only - No internet access to API
     endpoint_private_access = true
-    endpoint_public_access  = false
+    endpoint_public_access  = true
+    public_access_cidrs = ["129.122.44.139/32"]  # Your IP for admin access, adjust as needed
     
     # Reference your cluster security group from previous section
     security_group_ids = [aws_security_group.cluster.id]
@@ -258,14 +260,7 @@ resource "aws_eks_cluster" "main" {
     "scheduler"       # Pod scheduling decisions
   ]
 
-  # ENCRYPTION (Optional but recommended for production)
-  # Uncomment and provide KMS key ARN for production
-  # encryption_config {
-  #   resources = ["secrets"]
-  #   provider {
-  #     key_arn = var.kms_key_arn
-  #   }
-  # }
+  
 
   # TAGS for identification
   tags = {
