@@ -47,16 +47,29 @@ resource "random_password" "db_password" {
 
 
 # Store in Secrets Manager
-resource "aws_secretsmanager_secret_version" "db_credentials" {
-  secret_id = aws_secretsmanager_secret.db_credentials.id
+
+# Store in Secrets Manager
+resource "aws_secretsmanager_secret" "db_credentials" {
+  name        = "${var.name_prefix}-${var.environment}-rds-credentials"
+  description = "Database credentials"
+
+  tags = {
+    Environment = var.environment
+    Project     = var.name_prefix
+  }
+}
+
+resource "aws_secretsmanager_secret_version" "db_credentials_version" {
+  secret_id     = aws_secretsmanager_secret.db_credentials.id
   secret_string = jsonencode({
-    username = local.db_username
+    username = local.db_username  
     password = random_password.db_password.result
     engine   = var.engine
     port     = local.db_port
     dbname   = var.db_name
   })
 }
+
 
 
 
