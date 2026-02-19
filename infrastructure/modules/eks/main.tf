@@ -226,6 +226,17 @@ resource "aws_security_group_rule" "node_ingress_from_alb" {
   source_security_group_id = aws_security_group.alb.id
 }
 
+# RULE 7/7: Allow local IP to access cluster API for kubectl
+resource "aws_security_group_rule" "cluster_ingress_from_local_ip" {
+  description       = "Allow local IP to communicate with cluster API for kubectl"
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.cluster.id
+  cidr_blocks       = var.local_ip != "" ? [var.local_ip] : []  # Only add rule if local_ip is set
+}
+
 # EKS CLUSTER - The Kubernetes API Control Plane
 resource "aws_eks_cluster" "main" {
   name     = "${var.name_prefix}-${var.environment}-cluster"
@@ -240,7 +251,7 @@ resource "aws_eks_cluster" "main" {
     # SECURITY: Private endpoint only - No internet access to API
     endpoint_private_access = true
     endpoint_public_access  = true
-    public_access_cidrs = ["129.122.44.139/32"]  # Your IP for admin access, adjust as needed
+    public_access_cidrs = var.local_ip != "" ? [var.local_ip] : []  # Restrict public access to your IP
     
     # Reference your cluster security group from previous section
     security_group_ids = [aws_security_group.cluster.id]

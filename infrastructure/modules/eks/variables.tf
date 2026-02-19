@@ -47,9 +47,7 @@ variable "addon_versions" {
   }
 }
 
-# Optional for production
-# variable "kms_key_arn" {
-#   description = "KMS key ARN for EKS secrets encryption"
-#   type        = string
-#   default     = null
-# }
+variable "local_ip" {
+  default = "129.122.44.139/32"  # Replace with your actual IP address for secure access
+  
+}
