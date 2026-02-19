@@ -50,5 +50,5 @@ variable "addon_versions" {
 variable "local_ips" {
   description = "List of local IPs allowed to access the cluster API"
   type        = list(string)
-  default     = ["129.122.44.139/32", "129.122.62.198/32"]
+  default     = "102.176.75.66/32"
 }
