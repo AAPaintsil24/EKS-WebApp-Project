@@ -283,21 +283,26 @@ resource "aws_eks_cluster" "main" {
 }
 
 # OIDC IDENTITY PROVIDER - For IAM Roles for Service Accounts (IRSA)
-resource "aws_eks_identity_provider_config" "oidc" {
-  cluster_name = aws_eks_cluster.main.name
-
-  oidc {
-    client_id                     = "sts.amazonaws.com"
-    identity_provider_config_name = "${var.name_prefix}-${var.environment}-oidc"
-    issuer_url                    = aws_eks_cluster.main.identity[0].oidc[0].issuer
-  }
-
-  tags = {
-    Name        = "${var.name_prefix}-${var.environment}-oidc-provider"
-    Environment = var.environment
-    Purpose     = "irsa-authentication"
-  }
+data "aws_eks_cluster" "cluster" {
+  name = aws_eks_cluster.main.name
 }
+
+data "aws_eks_cluster_auth" "cluster" {
+  name = aws_eks_cluster.main.name
+}
+
+resource "aws_iam_openid_connect_provider" "eks" {
+  url = data.aws_eks_cluster.cluster.identity[0].oidc[0].issuer
+
+  client_id_list = [
+    "sts.amazonaws.com"
+  ]
+
+  thumbprint_list = [
+    "9e99a48a9960b14926bb7f3b02e22da0afd10e89"
+  ]
+}
+
 
 # EKS ADDONS - Essential cluster services
 # 1. CoreDNS - Internal DNS service
@@ -305,8 +310,6 @@ resource "aws_eks_addon" "coredns" {
   cluster_name  = aws_eks_cluster.main.name
   addon_name    = "coredns"
   
-  # Use version compatible with your Kubernetes version
-  addon_version = var.addon_versions.coredns
   
   
   
@@ -322,11 +325,8 @@ resource "aws_eks_addon" "coredns" {
 resource "aws_eks_addon" "kube_proxy" {
   cluster_name  = aws_eks_cluster.main.name
   addon_name    = "kube-proxy"
-  
-  addon_version = var.addon_versions.kube_proxy
-  
-  
-  
+
+    
   tags = {
     Name        = "${var.name_prefix}-${var.environment}-kube-proxy-addon"
     Environment = var.environment
@@ -340,9 +340,7 @@ resource "aws_eks_addon" "vpc_cni" {
   cluster_name  = aws_eks_cluster.main.name
   addon_name    = "vpc-cni"
   
-  addon_version = var.addon_versions.vpc_cni
-  
-  
+   
   
   tags = {
     Name        = "${var.name_prefix}-${var.environment}-vpc-cni-addon"
@@ -370,7 +368,7 @@ resource "aws_eks_node_group" "main" {
 
   instance_types = ["t3.medium"]
   capacity_type  = "ON_DEMAND"
-  ami_type       = "AL2_x86_64"
+  ami_type       = "AL2023_x86_64_STANDARD"
   disk_size      = 20
 
   labels = {
