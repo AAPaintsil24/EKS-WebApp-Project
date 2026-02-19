@@ -69,8 +69,7 @@ output "eks_cluster_security_group_ids" {
 
 # ===================== OIDC PROVIDER OUTPUT =====================
 output "oidc_provider_arn" {
-  description = "ARN of the OIDC identity provider for IRSA"
-  value       = aws_eks_identity_provider_config.oidc.id
+  value = aws_iam_openid_connect_provider.eks.arn
 }
 
 # ===================== ADDONS OUTPUTS =====================
