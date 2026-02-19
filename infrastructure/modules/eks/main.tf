@@ -160,7 +160,7 @@ resource "aws_security_group" "alb" {
 
 # ===================== SECURITY GROUP RULES =====================
 
-# RULE 1/6: Nodes can talk to Cluster API (443)
+# RULE 1/7: Nodes can talk to Cluster API (443)
 resource "aws_security_group_rule" "cluster_ingress_from_nodes" {
   description              = "Allow worker nodes to communicate with cluster API"
   type                     = "ingress"
@@ -171,7 +171,7 @@ resource "aws_security_group_rule" "cluster_ingress_from_nodes" {
   source_security_group_id = aws_security_group.node.id
 }
 
-# RULE 2/6: Cluster API can talk to Nodes (443)
+# RULE 2/7: Cluster API can talk to Nodes (443)
 resource "aws_security_group_rule" "node_ingress_from_cluster" {
   description              = "Allow cluster API to communicate with worker nodes"
   type                     = "ingress"
@@ -182,7 +182,7 @@ resource "aws_security_group_rule" "node_ingress_from_cluster" {
   source_security_group_id = aws_security_group.cluster.id
 }
 
-# RULE 3/6: Node-to-Node communication (All ports)
+# RULE 3/7: Node-to-Node communication (All ports)
 resource "aws_security_group_rule" "node_ingress_self" {
   description              = "Allow node-to-node communication for pod networking"
   type                     = "ingress"
@@ -193,7 +193,7 @@ resource "aws_security_group_rule" "node_ingress_self" {
   source_security_group_id = aws_security_group.node.id
 }
 
-# RULE 4/6: Internet HTTP to ALB (80)
+# RULE 4/7: Internet HTTP to ALB (80)
 resource "aws_security_group_rule" "alb_ingress_http" {
   description       = "Allow HTTP traffic from internet to ALB"
   type              = "ingress"
@@ -204,7 +204,7 @@ resource "aws_security_group_rule" "alb_ingress_http" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
-# RULE 5/6: Internet HTTPS to ALB (443)
+# RULE 5/7: Internet HTTPS to ALB (443)
 resource "aws_security_group_rule" "alb_ingress_https" {
   description       = "Allow HTTPS traffic from internet to ALB"
   type              = "ingress"
@@ -215,18 +215,18 @@ resource "aws_security_group_rule" "alb_ingress_https" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
-# RULE 6/6: ALB can talk to Nodes (NodePort range 30000-32767)
+# RULE 6/7: ALB can talk to Nodes (NodePort range 30000-32767)
 resource "aws_security_group_rule" "node_ingress_from_alb" {
   description              = "Allow ALB to forward traffic to nodes on NodePort range"
   type                     = "ingress"
-  from_port               = 30000
-  to_port                 = 32767
-  protocol                = "tcp"
-  security_group_id       = aws_security_group.node.id
+  from_port                = 30000
+  to_port                  = 32767
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.node.id
   source_security_group_id = aws_security_group.alb.id
 }
 
-# RULE 7/7: Allow local IP to access cluster API for kubectl
+# RULE 7/7: Allow local IP to access cluster API for kubectl (FIXED)
 resource "aws_security_group_rule" "cluster_ingress_from_local_ip" {
   description       = "Allow local IP to communicate with cluster API for kubectl"
   type              = "ingress"
@@ -234,8 +234,9 @@ resource "aws_security_group_rule" "cluster_ingress_from_local_ip" {
   to_port           = 443
   protocol          = "tcp"
   security_group_id = aws_security_group.cluster.id
-  cidr_blocks       = var.local_ips
+  cidr_blocks       = [var.local_ips]  # Wrapped in [] to convert string to list
 }
+
 
 # EKS CLUSTER - The Kubernetes API Control Plane
 resource "aws_eks_cluster" "main" {
@@ -251,7 +252,7 @@ resource "aws_eks_cluster" "main" {
     # SECURITY: Private endpoint only - No internet access to API
     endpoint_private_access = true
     endpoint_public_access  = true
-    public_access_cidrs = var.local_ips  # Restrict public access to your IPs
+    public_access_cidrs = [var.local_ips] # Restrict public access to your IPs
     
     # Reference your cluster security group from previous section
     security_group_ids = [aws_security_group.cluster.id]
