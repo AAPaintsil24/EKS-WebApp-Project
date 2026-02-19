@@ -47,14 +47,15 @@ resource "random_password" "db_password" {
 
 
 # Store in Secrets Manager
-resource "aws_secretsmanager_secret" "db_credentials" {
-  name        = "${var.name_prefix}-${var.environment}/rds/credentials"
-  description = "Database credentials"
-  
-  tags = {
-    Environment = var.environment
-    Project     = var.name_prefix
-  }
+resource "aws_secretsmanager_secret_version" "db_credentials" {
+  secret_id = aws_secretsmanager_secret.db_credentials.id
+  secret_string = jsonencode({
+    username = local.db_username
+    password = random_password.db_password.result
+    engine   = var.engine
+    port     = local.db_port
+    dbname   = var.db_name
+  })
 }
 
 
@@ -70,36 +71,33 @@ resource "aws_secretsmanager_secret_version" "db_credentials" {
 }
 
 
-# Create the RDS Database Instance
+# RDS instance
 resource "aws_db_instance" "main" {
   identifier = "${var.name_prefix}-${var.environment}-db"
-  
+
   engine         = var.engine
   engine_version = var.engine_version
   instance_class = var.instance_class
-  
+
   allocated_storage     = var.allocated_storage
   max_allocated_storage = var.max_allocated_storage
   storage_encrypted     = var.storage_encrypted
   storage_type          = "gp3"
-  
-  db_name  = var.db_name
-  username = var.db_username
-  password = random_password.db_password.result
 
+  db_name  = var.db_name
+  username = local.db_username
+  password = random_password.db_password.result
   port     = local.db_port
-  
+
   db_subnet_group_name   = aws_db_subnet_group.main.name
   vpc_security_group_ids = [aws_security_group.rds.id]
   publicly_accessible    = false
-  
+
   multi_az               = var.multi_az
-  
   backup_retention_period = local.backup_retention
-  
-  skip_final_snapshot       = var.skip_final_snapshot
-  deletion_protection       = local.final_deletion_protection
-  
+  skip_final_snapshot     = var.skip_final_snapshot
+  deletion_protection     = local.final_deletion_protection
+
   tags = {
     Name        = "${var.name_prefix}-${var.environment}-db"
     Environment = var.environment

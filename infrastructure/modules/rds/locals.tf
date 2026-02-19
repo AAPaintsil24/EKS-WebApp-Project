@@ -16,4 +16,7 @@ locals {
   
   # Set backup retention based on environment
   backup_retention = var.environment == "prod" ? 30 : var.backup_retention_period
+
+  db_username = "${var.name_prefix}_${var.environment}_dbuser"
+
 }
