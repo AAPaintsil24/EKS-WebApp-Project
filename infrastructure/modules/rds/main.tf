@@ -59,17 +59,6 @@ resource "aws_secretsmanager_secret_version" "db_credentials" {
 }
 
 
-resource "aws_secretsmanager_secret_version" "db_credentials" {
-  secret_id = aws_secretsmanager_secret.db_credentials.id
-  secret_string = jsonencode({
-    username = var.db_username
-    password = random_password.db_password.result
-    engine   = var.engine
-    port     = local.db_port
-    dbname   = var.db_name
-  })
-}
-
 
 # RDS instance
 resource "aws_db_instance" "main" {
