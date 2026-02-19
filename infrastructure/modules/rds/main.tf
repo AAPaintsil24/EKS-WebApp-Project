@@ -38,12 +38,13 @@ resource "aws_security_group" "rds" {
 # Generate random password
 resource "random_password" "db_password" {
   length           = 16
-  special          = true
   upper            = true
   lower            = true
-  numeric           = true
-  override_special = "!@#%&*()-_=+"
+  numeric          = true
+  special          = true
+  override_special = "!@#%&*()-_=+"  # safe special chars
 }
+
 
 # Store in Secrets Manager
 resource "aws_secretsmanager_secret" "db_credentials" {
@@ -84,7 +85,8 @@ resource "aws_db_instance" "main" {
   
   db_name  = var.db_name
   username = var.db_username
-  password = var.db_password != null ? var.db_password : random_password.db_password.result
+  password = random_password.db_password.result
+
   port     = local.db_port
   
   db_subnet_group_name   = aws_db_subnet_group.main.name
