@@ -251,7 +251,7 @@ resource "aws_eks_cluster" "main" {
     # SECURITY: Private endpoint only - No internet access to API
     endpoint_private_access = true
     endpoint_public_access  = true
-    public_access_cidrs = var.local_ip != "" ? [var.local_ip] : []  # Restrict public access to your IP
+    public_access_cidrs = [var.local_ips[count.index]]  # Restrict public access to local IPs only
     
     # Reference your cluster security group from previous section
     security_group_ids = [aws_security_group.cluster.id]
