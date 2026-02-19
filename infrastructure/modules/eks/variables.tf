@@ -47,7 +47,8 @@ variable "addon_versions" {
   }
 }
 
-variable "local_ip" {
-  default = "129.122.44.139/32"  # Replace with your actual IP address for secure access
-  
+variable "local_ips" {
+  description = "List of local IPs allowed to access the cluster API"
+  type        = list(string)
+  default     = ["129.122.44.139/32", "129.122.62.198/32"]
 }

@@ -234,7 +234,7 @@ resource "aws_security_group_rule" "cluster_ingress_from_local_ip" {
   to_port           = 443
   protocol          = "tcp"
   security_group_id = aws_security_group.cluster.id
-  cidr_blocks       = var.local_ip != "" ? [var.local_ip] : []  # Only add rule if local_ip is set
+  cidr_blocks       = [var.local_ips[count.index]]
 }
 
 # EKS CLUSTER - The Kubernetes API Control Plane
