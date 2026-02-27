@@ -17,4 +17,4 @@ db_engine_version  = "15.14"
 db_multi_az        = false
 
 
-kubernetes_version = "1.34"
+kubernetes_version = "1.35"
