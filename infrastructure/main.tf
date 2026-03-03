@@ -23,6 +23,10 @@ module "eks" {
   
   # EKS Configuration (CORRECT)
   kubernetes_version = var.kubernetes_version
+
+  # EKS Access
+  iam_user_arn = var.iam_user_arn
+  local_ips    = var.local_ips
 }
 
 

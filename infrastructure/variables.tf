@@ -82,3 +82,13 @@ variable "kubernetes_version" {
   type        = string
   default     = "1.34"  # Same as module default
 }
+
+variable "iam_user_arn" {
+  description = "IAM user ARN for local kubectl access"
+  type        = string
+}
+
+variable "local_ips" {
+  description = "Local IP for kubectl and security group access"
+  type        = string
+}
