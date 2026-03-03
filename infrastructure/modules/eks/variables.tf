@@ -47,6 +47,10 @@ variable "addon_versions" {
   }
 }
 
+variable "iam_user_arn" {
+  description = "IAM user ARN for local kubectl access"
+  type        = string
+}
 variable "local_ips" {
   description = "List of local IPs allowed to access the cluster API"
   type        = string

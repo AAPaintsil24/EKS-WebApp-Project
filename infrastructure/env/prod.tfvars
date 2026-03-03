@@ -17,4 +17,6 @@ db_engine_version  = "15.14"
 db_multi_az        = false
 
 
+#Kubernetes configuration
 kubernetes_version = "1.35"
+iam_user_arn = ""

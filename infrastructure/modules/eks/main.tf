@@ -401,3 +401,26 @@ resource "aws_eks_node_group" "main" {
   aws_iam_role_policy_attachment.node_ecr,     
    ]
 }
+
+# ===================== CLUSTER ACCESS =====================
+
+# Allow local IAM user to access the cluster via kubectl
+resource "aws_eks_access_entry" "local_admin" {
+  cluster_name  = aws_eks_cluster.main.name
+  principal_arn = var.iam_user_arn
+  type          = "STANDARD"
+
+  depends_on = [aws_eks_cluster.main]
+}
+
+resource "aws_eks_access_policy_association" "local_admin" {
+  cluster_name  = aws_eks_cluster.main.name
+  principal_arn = var.iam_user_arn
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+
+  access_scope {
+    type = "cluster"
+  }
+
+  depends_on = [aws_eks_access_entry.local_admin]
+}
