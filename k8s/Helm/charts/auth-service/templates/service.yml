@@ -1,12 +1,12 @@
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: {{ include "auth-service.name" . }}
-# spec:
-#   selector:
-#     app: {{ include "auth-service.name" . }}
-#   ports:
-#     - protocol: TCP
-#       port: 80
-#       targetPort: 4000
-#   type: ClusterIP
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "auth-service.name" . }}
+spec:
+  selector:
+    app: {{ include "auth-service.name" . }}
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 4000
+  type: ClusterIP
