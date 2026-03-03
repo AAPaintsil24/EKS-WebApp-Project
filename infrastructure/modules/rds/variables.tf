@@ -94,7 +94,7 @@ variable "multi_az" {
 variable "skip_final_snapshot" {
   description = "Whether to skip final snapshot on deletion"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "deletion_protection" {
