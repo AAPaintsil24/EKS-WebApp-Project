@@ -90,5 +90,5 @@ jobs:
           terraform destroy \
             -var-file="./env/${{ github.event.inputs.environment }}.tfvars" \
             -var="iam_user_arn=${{ secrets.IAM_USER_ARN }}" \
-            -auto-approve \     
+            -auto-approve    
       

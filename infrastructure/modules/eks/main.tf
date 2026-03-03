@@ -243,13 +243,18 @@ resource "aws_eks_cluster" "main" {
   name     = "${var.name_prefix}-${var.environment}-cluster"
   role_arn = aws_iam_role.cluster.arn  # From your IAM section
   version  = var.kubernetes_version
+  
+  access_config {
+    authentication_mode = "API_AND_CONFIG_MAP"
+  }
+
 
   # VPC CONFIGURATION - Private Endpoint Only
   vpc_config {
     # Control plane ENIs in PRIVATE K8s subnets only
     subnet_ids = var.private_k8s_subnet_ids
     
-    # SECURITY: Private endpoint only - No internet access to API
+    # SECURITY: Pulblic access restricted to your IPs, private access enabled for nodes and AWS services
     endpoint_private_access = true
     endpoint_public_access  = true
     public_access_cidrs = [var.local_ips] # Restrict public access to your IPs
