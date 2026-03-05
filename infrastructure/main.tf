@@ -39,6 +39,7 @@ module "rds" {
   
   vpc_id       = module.vpc.vpc_id
   db_subnet_ids = module.vpc.private_db_subnet_ids
+  allowed_security_group_ids = [module.eks.node_security_group_id]
   
   db_name     = var.db_name
   db_username = var.db_username

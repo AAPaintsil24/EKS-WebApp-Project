@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: my-app
+  name: app
   namespace: argocd
 spec:
   project: default
@@ -11,7 +11,7 @@ spec:
     path: k8s/Helm  # <-- Points to Helm inside k8s directory
   destination:
     server: https://kubernetes.default.svc
-    namespace: my-app
+    namespace: app
   syncPolicy:
     automated:
       prune: true
