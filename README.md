@@ -16,25 +16,20 @@ The system is fully containerised, environment-aware (`dev` and `prod`), and fol
 
 ---
 
-## 🧱 Architecture Overview
+## 🏗 Architecture Overview
 
-```
-User (Browser)
-   │
-   ▼
-Frontend (React + Nginx)
-   │
-   ▼
-Backend (Node.js Auth API)
-   │
-   ▼
-PostgreSQL (AWS RDS)
-   │
-   ▼
-Kubernetes (EKS Cluster)
-   │
-   ▼
-AWS Infrastructure (Provisioned via Terraform)
+- **Amazon EKS** – managed Kubernetes cluster
+- **Application services**  
+  - `auth-service` (Node.js, port 4000)  
+  - `frontend` (React/Next.js static served by Nginx, port 80)
+- **Amazon RDS (PostgreSQL)** – database for auth‑service
+- **AWS ALB** – ingress controller exposing the frontend
+- **AWS ECR** – private container image registry
+- **External Secrets Operator** – syncs RDS credentials from AWS Secrets Manager
+- **ArgoCD** – continuous delivery of Helm charts to the cluster
+
+All internal communication uses Kubernetes `ClusterIP` services. The frontend calls `auth-service` internally via its service name.
+
 ```
 
 ### Key Characteristics
