@@ -30,7 +30,7 @@ The system is fully containerised, environment-aware (`dev` and `prod`), and fol
 
 All internal communication uses Kubernetes `ClusterIP` services. The frontend calls `auth-service` internally via its service name.
 
-```
+---
 
 ### Key Characteristics
 - Stateless services
